@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Link Shortcut</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+		}
+
+		h1 {
+			text-align: center;
+		}
+
+		form {
+			margin: 0 auto;
+			max-width: 800px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		label {
+			font-size: 1.2rem;
+			margin-bottom: 0.5rem;
+			text-align: center;
+			display: block;
+		}
+
+		input[type="text"] {
+			width: 100%;
+			max-width: 600px;
+			padding: 0.5rem;
+			font-size: 1.2rem;
+			border: 1px solid #ccc;
+			border-radius: 0.5rem;
+			margin-bottom: 1rem;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			box-sizing: border-box;
+		}
+
+		button[type="submit"], button[type="button"] {
+			padding: 0.5rem;
+			font-size: 1.2rem;
+			border-radius: 0.5rem;
+			background-color: #008CBA;
+			color: white;
+			border: none;
+			cursor: pointer;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			transition: background-color 0.2s ease-in-out;
+		}
+
+		button[type="submit"]:hover, button[type="button"]:hover {
+			background-color: #00677F;
+		}
+
+		.error-message {
+			color: red;
+			margin-top: 0.5rem;
+		}
+
+		.short-url {
+			margin-top: 1rem;
+			font-size: 1.2rem;
+			text-align: center;
+			display: none;
+		}
+
+		.short-url a {
+			color: #008CBA;
+			text-decoration: none;
+			border-bottom: 1px solid #008CBA;
+		}
+
+		.short-url a:hover {
+			background-color: #008CBA;
+			color: white;
+		}
+
+    
+.clear-button {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    background-color: #ddd;
+    color: #333;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.clear-button:hover {
+    background-color: #ccc;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    width: 31rem;
+}
+
+#long-url {
+    width: 100%;
+    max-width: 600px;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.clear-button {
+
+  transform: translate(12px, -8px);
+	height: 2.7rem;
+}
+
+.paste-button {
+
+  transform: translate(15px, -8px);
+margin-right: 0.5rem;
+height: 2.7rem;
+}
+
+/* Media queries for screens smaller than 600px */
+@media only screen and (max-width: 600px) {
+  form {
+    max-width: 90%;
+  }
+
+  .input-container {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #long-url {
+    max-width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .clear-button {
+    margin-right: 0;
+    margin-top: 0.5rem;
+  }
+
+  button[type="submit"],
+  button[type="button"] {
+    width: 100%;
+  }
+}
+
+/* Media queries for screens larger than 600px */
+@media only screen and (min-width: 600px) {
+  form {
+    max-width: 800px;
+  }
+
+  .input-container {
+    width: 32rem;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  #long-url {
+    margin-bottom: 1rem;
+  }
+
+  .clear-button {
+    margin-right: 0.5rem;
+    margin-top: 0;
+  }
+
+  button[type="submit"],
+  button[type="button"] {
+    width: auto;
+  }
+}
+
+	</style>
+</head>
+<body>
+	<h1>Link Shortcut</h1>
+<form onsubmit="event.preventDefault(); generateShortUrl();">
+    <label for="long-url">Enter a long Amazon URL:</label>
+    <div class="input-container">
+        <input type="text" id="long-url" placeholder="https://www.amazon.eg/...">
+        <button type="button" onclick="clearInput()" class="clear-button">Clear</button>
+        <button type="button" class="paste-button" id="paste-button">Paste</button>
+
+
+    </div>
+    <button type="submit">Generate Short URL</button>
+    <p class="error-message" id="error-message"></p>
+    <p class="short-url" id="short-url"></p>	
+    
+</form>
+
+	<script>
+		function generateShortUrl() {
+			const longUrl = document.getElementById("long-url").value;
+			const regex = /\/dp\/([\w]+)/;
+			const match = regex.exec(longUrl);
+
+			if (match) {
+				const productId = match[1];
+				const shortUrl = `https://www.amazon.eg/dp/${productId}/`;
+				document.getElementById("short-url").innerHTML = `Short URL: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
+				document.getElementById("short-url").style.display = "block";
+				document.getElementById("error-message").style.display = "none";
+
+
+
+			} else {
+				document.getElementById("error-message").innerHTML = "Invalid URL. Please enter a valid Amazon product URL.";
+				document.getElementById("short-url").innerHTML = "";
+
+			}
+		}
+
+		function handleKeyUp(event) {
+			if (event.key === "Enter") {
+				generateShortUrl();
+			}
+		}
+                function clearInput() {
+                        document.getElementById("long-url").value = "";
+                }
+				function generateShortUrl() {
+    const longUrl = document.getElementById("long-url").value;
+    const regex = /\/dp\/([\w]+)/;
+    const match = regex.exec(longUrl);
+
+    if (match) {
+        const productId = match[1];
+        const shortUrl = `https://www.amazon.eg/dp/${productId}/`;
+
+        // create copy button
+        const copyButton = document.createElement("button");
+        copyButton.innerText = "Copy";
+        copyButton.type = "button";
+        copyButton.addEventListener("click", () => {
+            navigator.clipboard.writeText(shortUrl);
+        });
+
+        // create short URL link
+        const shortUrlLink = document.createElement("a");
+        shortUrlLink.href = shortUrl;
+        shortUrlLink.target = "_blank";
+        shortUrlLink.innerText = shortUrl;
+
+        // append copy button and short URL link to short URL element
+        const shortUrlElement = document.getElementById("short-url");
+        shortUrlElement.innerHTML = "Short URL: ";
+        shortUrlElement.appendChild(shortUrlLink);
+        shortUrlElement.appendChild(document.createTextNode(" "));
+        shortUrlElement.appendChild(copyButton);
+
+        shortUrlElement.style.display = "block";
+        document.getElementById("error-message").style.display = "none";
+    } else {
+        document.getElementById("error-message").innerHTML = "Invalid URL. Please enter a valid Amazon product URL.";
+        document.getElementById("short-url").innerHTML = "";
+    }
+}
+// get a reference to the paste button
+const pasteButton = document.getElementById("paste-button");
+
+// add an event listener to the paste button
+pasteButton.addEventListener("click", () => {
+  navigator.clipboard.readText().then((text) => {
+    const longUrlInput = document.getElementById("long-url");
+    longUrlInput.value = text;
+  });
+});
+
+	</script>
+</body>
+</html>
